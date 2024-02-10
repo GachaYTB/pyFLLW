@@ -31,26 +31,33 @@ filename = args.filename
 flags = args.flags
 if not filename.endswith(".spwn"):
     filename = filename + ".spwn"
-initial_mod_time = os.path.getmtime(filename)
+try:
+    initial_mod_time = os.path.getmtime(filename)
+except:
+    pass
 
 print(f"{pyFLLW} Ready and waiting for changes to {filename}{Fore.WHITE}")
 while True:
-    current_mod_time = os.path.getmtime(filename)
-    if current_mod_time != initial_mod_time:
-        print(f"{pyFLLW} Detected changes in {filename}, running spwn...{Fore.WHITE}")
+    try:
+        current_mod_time = os.path.getmtime(filename)
+        if current_mod_time != initial_mod_time:
+            print(f"{pyFLLW} Detected changes in {filename}, running spwn...{Fore.WHITE}")
 
-        try:
-            if "GeometryDash.exe" in get_running_tasks():
-                os.system("taskkill /F /IM GeometryDash.exe")
-                print(f"{pyFLLW} Closed Geometry Dash.{Fore.WHITE}")
-            if flags != []:
-                os.system(f"spwn build {filename} {flags}")
-            else:
-                os.system(f"spwn build {filename}")
-            print(f"{pyFLLW} Finished building, running Geometry Dash...{Fore.WHITE}")
-            os.system("start steam://rungameid/322170")
-        except:
-            print(f"{pyFLLW} Error while building, waiting for new changes...{Fore.WHITE}")
+            try:
+                if "GeometryDash.exe" in get_running_tasks():
+                    os.system("taskkill /F /IM GeometryDash.exe")
+                    print(f"{pyFLLW} Closed Geometry Dash.{Fore.WHITE}")
+                if flags != []:
+                    os.system(f"spwn build {filename} {flags}")
+                else:
+                    os.system(f"spwn build {filename}")
+                print(f"{pyFLLW} Finished building, running Geometry Dash...{Fore.WHITE}")
+                os.system("start steam://rungameid/322170")
+            except:
+                print(f"{pyFLLW} Error while building, waiting for new changes...{Fore.WHITE}")
 
-        initial_mod_time = current_mod_time
-    time.sleep(0.1)
+            initial_mod_time = current_mod_time
+        time.sleep(0.1)
+    except FileNotFoundError:
+        print(f'{pyFLLW} Detected rename or delete of "{filename}", closing FLLW...{Fore.WHITE}')
+        break
