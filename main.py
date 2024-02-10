@@ -45,7 +45,7 @@ while True:
 
             try:
                 if "GeometryDash.exe" in get_running_tasks():
-                    os.system("taskkill /F /IM GeometryDash.exe")
+                    os.system("taskkill /F /IM GeometryDash.exe > NUL 2>&1")
                     print(f"{pyFLLW} Closed Geometry Dash.{Fore.WHITE}")
                 if flags != []:
                     os.system(f"spwn build {filename} {flags}")
